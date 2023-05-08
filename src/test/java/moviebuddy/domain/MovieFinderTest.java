@@ -1,5 +1,9 @@
 package moviebuddy.domain;
 
+import moviebuddy.MovieBuddyFactory;
+import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.Test;
+
 import java.util.List;
 
 /**
@@ -7,20 +11,19 @@ import java.util.List;
  */
 public class MovieFinderTest {
 
-	public static void main(String[] args) {
-		MovieFinder movieFinder = new MovieFinder();
-		
-		List<Movie> result = movieFinder.directedBy("Michael Bay");
-		assertEquals(3, result.size());
+	final MovieBuddyFactory movieBuddyFactory = new MovieBuddyFactory();
+	final MovieFinder movieFinder = movieBuddyFactory.movieFinder();
 
-        result = movieFinder.releasedYearBy(2015);
-        assertEquals(225, result.size());
+	@Test
+	void NotEmpty_directedBy() {
+		List<Movie> movies = movieFinder.directedBy("Michael Bay");
+		Assertions.assertEquals(3, movies.size());
 	}
-	
-	static void assertEquals(long expected, long actual) {
-		if (expected != actual) {
-			throw new RuntimeException(String.format("actual(%d) is different from the expected(%d)", actual, expected));			
-		}
+
+	@Test
+	void NotEmpty_ReleasedYearBy() {
+		List<Movie> movies = movieFinder.releasedYearBy(2015);
+		Assertions.assertEquals(225, movies.size());
 	}
 	
 }
