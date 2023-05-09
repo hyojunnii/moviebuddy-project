@@ -1,14 +1,12 @@
 package moviebuddy;
 
-import moviebuddy.domain.CsvMovieReader;
-import moviebuddy.domain.MovieFinder;
-import moviebuddy.domain.MovieReader;
-import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 
 // 빈 구성정보 (Configuration Metadata)
 @Configuration
+@ComponentScan(basePackages = {"moviebuddy"}) // 자동 클래스 탐지 기법
 @Import({MovieBuddyFactory.DomainModuleConfig.class, MovieBuddyFactory.DataSourceModuleConfig.class})
 //@ImportResource("xml file location")
 public class MovieBuddyFactory {
@@ -24,20 +22,11 @@ public class MovieBuddyFactory {
     @Configuration
     static class DomainModuleConfig {
 
-        @Bean
-        //@Scope(ConfigurableBeanFactory.SCOPE_PROTOTYPE) - 빈 스코프 미지정시 싱글톤
-        public MovieFinder movieFinder(MovieReader movieReader) {
-            return new MovieFinder(movieReader);
-        }
     }
 
     @Configuration
     static class DataSourceModuleConfig {
 
-        @Bean
-        public MovieReader movieReader() {
-            return new CsvMovieReader();
-        }
     }
 
 }
