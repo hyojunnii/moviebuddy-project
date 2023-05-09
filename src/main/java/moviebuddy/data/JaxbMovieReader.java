@@ -1,6 +1,8 @@
-package moviebuddy.domain;
+package moviebuddy.data;
 
 import moviebuddy.ApplicationException;
+import moviebuddy.domain.MovieReader;
+import moviebuddy.domain.Movie;
 import org.springframework.stereotype.Repository;
 
 import javax.xml.bind.JAXBContext;
