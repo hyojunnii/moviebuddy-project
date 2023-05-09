@@ -1,13 +1,17 @@
 package moviebuddy.domain;
 
+import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+@Service
 public class MovieFinder {
 
     private final MovieReader movieReader;
 
+    //@Autowired // 생성자 하나면 생략 가능
     public MovieFinder(MovieReader movieReader) {
         this.movieReader = Objects.requireNonNull(movieReader);
     }
