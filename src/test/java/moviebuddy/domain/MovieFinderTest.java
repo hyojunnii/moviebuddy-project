@@ -3,18 +3,29 @@ package moviebuddy.domain;
 import moviebuddy.MovieBuddyFactory;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import java.util.List;
 
 /**
  * @author springrunner.kr@gmail.com
  */
+@SpringJUnitConfig(MovieBuddyFactory.class)
+//@ExtendWith(SpringExtension.class)
+//@ContextConfiguration(classes = MovieBuddyFactory.class) - @SpringJUnitConfig에 포함
 public class MovieFinderTest {
 
-	final ApplicationContext applicationContext = new AnnotationConfigApplicationContext(MovieBuddyFactory.class);
-	final MovieFinder movieFinder = applicationContext.getBean(MovieFinder.class);
+	@Autowired MovieFinder movieFinder; // 필드 주입
+
+//	@Autowired // 생성자 주입
+//	MovieFinderTest(MovieFinder movieFinder) {
+//		this.movieFinder = movieFinder;
+//	}
+//	@Autowired // 세터 주입
+//	void setMovieFinder(MovieFinder movieFinder) {
+//		this.movieFinder = movieFinder;
+//	}
 
 	@Test
 	void NotEmpty_directedBy() {
