@@ -1,6 +1,5 @@
 package moviebuddy.domain;
 
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -13,7 +12,7 @@ public class MovieFinder {
     private final MovieReader movieReader;
 
     //@Autowired // 생성자 하나면 생략 가능
-    public MovieFinder(@Qualifier("csvMovieReader") MovieReader movieReader) {
+    public MovieFinder(MovieReader movieReader) {
         this.movieReader = Objects.requireNonNull(movieReader);
     }
 
