@@ -1,23 +1,24 @@
 package moviebuddy;
 
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
+import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 // 빈 구성정보 (Configuration Metadata)
 @Configuration
 @ComponentScan(basePackages = {"moviebuddy"}) // 자동 클래스 탐지 기법
 @Import({MovieBuddyFactory.DomainModuleConfig.class, MovieBuddyFactory.DataSourceModuleConfig.class})
-//@ImportResource("xml file location")
 public class MovieBuddyFactory {
 
-    /**
-     * 자바 코드로 의존관계 주입하는 방법
-     * 1. 메소드 콜 - movieReader() 직접 호출
-     * 2. 메소드 파라미터
-     * 3. 생성자
-     * 4. 애노테이션
-     */
+   @Bean
+   public Jaxb2Marshaller jaxb2Marshaller() {
+        Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
+        marshaller.setPackagesToScan("moviebuddy");
+
+        return marshaller;
+    }
 
     @Configuration
     static class DomainModuleConfig {
