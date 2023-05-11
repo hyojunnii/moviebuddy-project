@@ -1,10 +1,6 @@
 package moviebuddy;
 
-import moviebuddy.data.CsvMovieReader;
-import moviebuddy.data.XmlMovieReader;
 import org.springframework.context.annotation.*;
-import org.springframework.core.env.Environment;
-import org.springframework.oxm.Unmarshaller;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
 // 빈 구성정보 (Configuration Metadata)
