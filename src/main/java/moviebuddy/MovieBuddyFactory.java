@@ -30,31 +30,6 @@ public class MovieBuddyFactory {
     @Configuration
     static class DataSourceModuleConfig {
 
-        private final Environment environment;
-
-        public DataSourceModuleConfig(Environment environment) {
-            this.environment = environment;
-        }
-
-        @Profile(MovieBuddyProfile.CSV_MODE)
-        @Bean
-        public CsvMovieReader csvMovieReader() {
-            CsvMovieReader movieReader = new CsvMovieReader();
-
-            // 애플리케이션 외부에서 작성된 설정정보를 일겅, 메타데이터 위치 설정하기
-            movieReader.setMetadata(environment.getProperty("movie.metadata"));
-
-            return movieReader;
-        }
-
-        @Profile(MovieBuddyProfile.XML_MODE)
-        @Bean
-        public XmlMovieReader xmlMovieReader(Unmarshaller unmarshaller) {
-            XmlMovieReader movieReader = new XmlMovieReader(unmarshaller);
-            movieReader.setMetadata(environment.getProperty("movie.metadata"));
-
-            return movieReader;
-        }
     }
 
 }
