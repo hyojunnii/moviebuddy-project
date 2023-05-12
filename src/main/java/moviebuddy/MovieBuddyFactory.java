@@ -1,7 +1,12 @@
 package moviebuddy;
 
+import com.github.benmanes.caffeine.cache.Caffeine;
+import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
 import org.springframework.context.annotation.*;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
+
+import java.util.concurrent.TimeUnit;
 
 // 빈 구성정보 (Configuration Metadata)
 @Configuration
@@ -16,6 +21,14 @@ public class MovieBuddyFactory {
         marshaller.setPackagesToScan("moviebuddy");
 
         return marshaller;
+    }
+
+    @Bean
+    public CacheManager caffeineCacheManager() {
+        CaffeineCacheManager cacheManager = new CaffeineCacheManager();
+        cacheManager.setCaffeine(Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS));
+
+        return cacheManager;
     }
 
     @Configuration

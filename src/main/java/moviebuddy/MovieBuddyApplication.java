@@ -2,6 +2,7 @@ package moviebuddy;
 
 import moviebuddy.domain.Movie;
 import moviebuddy.domain.MovieFinder;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 /**
  * @author springrunner.kr@gmail.com
  */
+@EnableCaching
 public class MovieBuddyApplication {
 
     public static void main(String[] args) throws Exception {
