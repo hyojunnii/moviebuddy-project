@@ -1,10 +1,12 @@
 package moviebuddy;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import moviebuddy.data.CachingMovieReader;
+import moviebuddy.cache.CachingAdvice;
 import moviebuddy.domain.MovieReader;
+import org.springframework.aop.framework.ProxyFactoryBean;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
@@ -43,8 +45,19 @@ public class MovieBuddyFactory {
 
         @Primary
         @Bean
-        public MovieReader cachingMovieReader(CacheManager cacheManager, MovieReader target) {
-            return new CachingMovieReader(cacheManager, target);
+        public ProxyFactoryBean cachingMovieReaderFactory(ApplicationContext applicationContext) {
+            MovieReader target = applicationContext.getBean(MovieReader.class);
+            CacheManager cacheManager = applicationContext.getBean(CacheManager.class);
+
+            ProxyFactoryBean proxyFactoryBean = new ProxyFactoryBean();
+            proxyFactoryBean.setTarget(target);
+
+            // 클래스 프락시 (비활) : 인터페이스를 통한 의존 관계 주입이 나음
+            // proxyFactoryBean.setProxyTargetClass(true);
+
+            proxyFactoryBean.addAdvice(new CachingAdvice(cacheManager));
+
+            return proxyFactoryBean;
         }
     }
 
