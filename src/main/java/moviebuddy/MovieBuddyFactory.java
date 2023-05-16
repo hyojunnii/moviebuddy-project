@@ -1,24 +1,12 @@
 package moviebuddy;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import moviebuddy.cache.CachingAdvice;
-import moviebuddy.domain.MovieReader;
-import org.aopalliance.aop.Advice;
-import org.checkerframework.checker.units.qual.N;
-import org.springframework.aop.Advisor;
-import org.springframework.aop.Pointcut;
-import org.springframework.aop.framework.ProxyFactoryBean;
-import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
-import org.springframework.aop.support.DefaultPointcutAdvisor;
-import org.springframework.aop.support.NameMatchMethodPointcut;
-import org.springframework.aop.support.annotation.AnnotationMatchingPointcut;
+import moviebuddy.cache.CachingAspect;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
-import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.*;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
-import javax.cache.annotation.CacheResult;
 import java.util.concurrent.TimeUnit;
 
 // 빈 구성정보 (Configuration Metadata)
@@ -26,6 +14,7 @@ import java.util.concurrent.TimeUnit;
 @PropertySource("/application.properties")
 @ComponentScan(basePackages = {"moviebuddy"}) // 자동 클래스 탐지 기법
 @Import({MovieBuddyFactory.DomainModuleConfig.class, MovieBuddyFactory.DataSourceModuleConfig.class})
+@EnableAspectJAutoProxy
 public class MovieBuddyFactory {
 
     @Bean
@@ -44,6 +33,12 @@ public class MovieBuddyFactory {
         return cacheManager;
     }
 
+    @Bean
+    public CachingAspect cachingAspect(CacheManager cacheManager) {
+        return new CachingAspect(cacheManager);
+    }
+
+    /* 스프링 AOP API ProxyCreater, Advisor
     @Bean // 자동 프락시 생성기
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
         return new DefaultAdvisorAutoProxyCreator();
@@ -57,6 +52,7 @@ public class MovieBuddyFactory {
         // Advisor = PointCut(대상 선정 알고리즘) + Advice(부가기능)
         return new DefaultPointcutAdvisor(pointcut, advice);
     }
+    */
 
     @Configuration
     static class DomainModuleConfig {
