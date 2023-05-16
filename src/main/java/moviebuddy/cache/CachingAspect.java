@@ -14,7 +14,7 @@ import java.util.Objects;
 public class CachingAspect {
 
     private final Logger log = LoggerFactory.getLogger(getClass());
-    private final CacheManager cacheManager;
+    private final CacheManager cacheManager; // 추상화된 캐시 API
 
     public CachingAspect(CacheManager cacheManager) {
         this.cacheManager = Objects.requireNonNull(cacheManager);

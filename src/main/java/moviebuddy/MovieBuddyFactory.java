@@ -1,9 +1,11 @@
 package moviebuddy;
 
 import com.github.benmanes.caffeine.cache.Caffeine;
-import moviebuddy.cache.CachingAspect;
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.annotation.CachingConfigurer;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.interceptor.*;
 import org.springframework.context.annotation.*;
 import org.springframework.oxm.jaxb.Jaxb2Marshaller;
 
@@ -14,8 +16,8 @@ import java.util.concurrent.TimeUnit;
 @PropertySource("/application.properties")
 @ComponentScan(basePackages = {"moviebuddy"}) // 자동 클래스 탐지 기법
 @Import({MovieBuddyFactory.DomainModuleConfig.class, MovieBuddyFactory.DataSourceModuleConfig.class})
-@EnableAspectJAutoProxy
-public class MovieBuddyFactory {
+@EnableCaching // 정교한 설정은 CachingConfigurer 이용
+public class MovieBuddyFactory implements CachingConfigurer {
 
     @Bean
     public Jaxb2Marshaller jaxb2Marshaller() {
@@ -33,12 +35,36 @@ public class MovieBuddyFactory {
         return cacheManager;
     }
 
+    @Override
+    public CacheManager cacheManager() {
+        return caffeineCacheManager();
+    }
+
+    @Override
+    public CacheResolver cacheResolver() {
+        return new SimpleCacheResolver(caffeineCacheManager());
+    }
+
+    @Override
+    public KeyGenerator keyGenerator() {
+        return new SimpleKeyGenerator();
+    }
+
+    @Override
+    public CacheErrorHandler errorHandler() {
+        // @EnableAsync 비동기처리 컴포넌트 등록 -> AsyncConfigurer
+        // @EnableScheduling 주기적 스케줄링 -> SchedulingConfigurer
+
+        return new SimpleCacheErrorHandler();
+    }
+
+    /* @EnableCaching(선언적 캐싱 기법)으로 변경
     @Bean
     public CachingAspect cachingAspect(CacheManager cacheManager) {
         return new CachingAspect(cacheManager);
     }
 
-    /* 스프링 AOP API ProxyCreater, Advisor
+    // 스프링 AOP API ProxyCreater, Advisor
     @Bean // 자동 프락시 생성기
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
         return new DefaultAdvisorAutoProxyCreator();
