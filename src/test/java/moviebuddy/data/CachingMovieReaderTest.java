@@ -4,6 +4,7 @@ import moviebuddy.domain.Movie;
 import moviebuddy.domain.MovieReader;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.springframework.cache.Cache;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.concurrent.ConcurrentMapCacheManager;
 
@@ -19,11 +20,13 @@ class CachingMovieReaderTest {
 
         CachingMovieReader movieReader = new CachingMovieReader(cacheManager, target);
 
-        Assertions.assertNull(movieReader.getCachedData());
+        Cache cache = cacheManager.getCache(CachingMovieReader.CACHE_NAME);
+        Assertions.assertNull(cache.get(CachingMovieReader.CACHE_KEY_MOVIES));
 
         List<Movie> movies = movieReader.loadMovies();
-        Assertions.assertNotNull(movieReader.getCachedData());
+        Assertions.assertNotNull(cache.get(CachingMovieReader.CACHE_KEY_MOVIES));
         Assertions.assertSame(movieReader.loadMovies(), movies);
+
     }
 
     class DummyMovieReader implements MovieReader {
