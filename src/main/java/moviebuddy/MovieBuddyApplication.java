@@ -88,6 +88,7 @@ public class MovieBuddyApplication {
         // 개봉년도로 영화 검색:: ❯ releasedYearBy 2015
         commandActions.put(Command.releasedYearBy, arguments -> {
             int releaseYear;
+            // 사용자가 입력한 명령어를 해석
             try {
                 releaseYear = Integer.parseInt(arguments.get(1));
             } catch (IndexOutOfBoundsException | NumberFormatException error) {
@@ -131,7 +132,9 @@ public class MovieBuddyApplication {
                 }
                 commandAction.accept(arguments);
             } catch (ApplicationException error) {
-                output.println(error.getMessage());
+                // application.errors.CommandNotFoundException
+                String code = String.format("application.errors.%s", error.getClass().getSimpleName());
+                output.println(messageSource.getMessage(code, new Object[0], error.getMessage(), Locale.getDefault()));
             } finally {
                 output.flush();
             }
