@@ -13,8 +13,8 @@ import java.util.concurrent.TimeUnit;
 
 // 빈 구성정보 (Configuration Metadata)
 @Configuration
-@PropertySource("/application.properties")
-@ComponentScan(basePackages = {"moviebuddy"}) // 자동 클래스 탐지 기법
+@PropertySource("classpath:/application.properties")
+@ComponentScan(basePackages = "moviebuddy") // 자동 클래스 탐지 기법
 @Import({MovieBuddyFactory.DomainModuleConfig.class, MovieBuddyFactory.DataSourceModuleConfig.class})
 @EnableCaching // 정교한 설정은 CachingConfigurer 이용
 public class MovieBuddyFactory implements CachingConfigurer {
@@ -28,7 +28,7 @@ public class MovieBuddyFactory implements CachingConfigurer {
     }
 
     @Bean
-    public CacheManager caffeineCacheManager() {
+    public CaffeineCacheManager caffeineCacheManager() {
         CaffeineCacheManager cacheManager = new CaffeineCacheManager();
         cacheManager.setCaffeine(Caffeine.newBuilder().expireAfterWrite(3, TimeUnit.SECONDS));
 
